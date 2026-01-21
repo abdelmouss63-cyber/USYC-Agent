@@ -1,0 +1,28 @@
+# USYC Protocol Labs - Dependencies
+
+# Web3 & Blockchain
+web3>=6.0.0
+
+# API Framework
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.0.0
+
+# HTTP Client (for Gateway & x402)
+aiohttp>=3.9.0
+
+# PDF Generation
+reportlab>=4.0.0
+qrcode[pil]>=7.4.0
+pillow>=10.0.0
+
+# Configuration
+python-dotenv>=1.0.0
+
+# CLI
+colorama>=0.4.6
+
+# Development (optional)
+# pytest>=7.4.0
+# pytest-asyncio>=0.21.0
+# httpx>=0.25.0

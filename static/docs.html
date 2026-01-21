@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation | USYC Protocol Labs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1E3A5F',
+                        'navy-light': '#2a4a73',
+                        'navy-dark': '#152942',
+                        electric: '#3498DB',
+                        neon: '#2ECC71',
+                        purple: '#9B59B6',
+                        'dark-bg': '#0a0f1a',
+                        'dark-card': '#111827',
+                    },
+                    fontFamily: {
+                        'space': ['Space Grotesk', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0a0f1a;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1E3A5F 50%, #0a0f1a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Grid Pattern */
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(52, 152, 219, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(52, 152, 219, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(52, 152, 219, 0.4);
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #3498DB 0%, #2ECC71 50%, #9B59B6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Status Pulse */
+        .status-pulse {
+            width: 10px;
+            height: 10px;
+            background: #2ECC71;
+            border-radius: 50%;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .status-pulse::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 16px;
+            height: 16px;
+            background: rgba(46, 204, 113, 0.4);
+            border-radius: 50%;
+            animation: pulseRing 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Method Badges */
+        .method-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .method-get {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498DB;
+            border: 1px solid rgba(52, 152, 219, 0.4);
+        }
+
+        .method-post {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ECC71;
+            border: 1px solid rgba(46, 204, 113, 0.4);
+        }
+
+        /* Endpoint Card */
+        .endpoint-card {
+            background: rgba(17, 24, 39, 0.5);
+            border: 1px solid rgba(52, 152, 219, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .endpoint-card:hover {
+            border-color: rgba(52, 152, 219, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .endpoint-card.expanded {
+            border-color: rgba(52, 152, 219, 0.5);
+        }
+
+        .endpoint-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: background 0.3s ease;
+        }
+
+        .endpoint-header:hover {
+            background: rgba(52, 152, 219, 0.05);
+        }
+
+        .endpoint-body {
+            display: none;
+            padding: 0 20px 20px;
+            border-top: 1px solid rgba(52, 152, 219, 0.1);
+        }
+
+        .endpoint-card.expanded .endpoint-body {
+            display: block;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Input Fields */
+        .input-field {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #fff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #3498DB;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: #6b7280;
+        }
+
+        /* Execute Button */
+        .execute-btn {
+            background: linear-gradient(135deg, #3498DB, #2ECC71);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .execute-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(52, 152, 219, 0.4);
+        }
+
+        .execute-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Response Area */
+        .response-area {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .response-area.error {
+            border-color: rgba(231, 76, 60, 0.5);
+        }
+
+        .response-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .response-area::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .response-area::-webkit-scrollbar-thumb {
+            background: rgba(52, 152, 219, 0.5);
+            border-radius: 3px;
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            color: #3498DB;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: rgba(52, 152, 219, 0.3);
+        }
+
+        /* Category Header */
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        .category-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-top-color: #3498DB;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* JSON Syntax Highlighting */
+        .json-key { color: #9B59B6; }
+        .json-string { color: #2ECC71; }
+        .json-number { color: #3498DB; }
+        .json-boolean { color: #E74C3C; }
+        .json-null { color: #95a5a6; }
+
+        /* Nav Link */
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: #9ca3af;
+        }
+
+        .nav-link:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498DB;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar-item {
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+
+        .sidebar-item:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #fff;
+        }
+
+        .sidebar-item.active {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498DB;
+            border-left: 2px solid #3498DB;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+    <div class="grid-pattern"></div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Header -->
+        <header class="glass-card p-6 mb-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-electric to-purple flex items-center justify-center">
+                        <span class="text-2xl">📚</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold">
+                            <span class="gradient-text">USYC Protocol Labs</span>
+                        </h1>
+                        <p class="text-gray-400 text-sm">API Documentation v2.0</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-2">
+                        <div class="status-pulse"></div>
+                        <span class="text-sm text-gray-400">API Online</span>
+                    </div>
+                    <a href="/" class="nav-link">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="/swagger" class="nav-link">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                        </svg>
+                        Swagger
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- Sidebar Navigation -->
+            <aside class="lg:w-64 flex-shrink-0">
+                <div class="sidebar glass-card p-4">
+                    <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">Navigation</div>
+                    <nav class="space-y-1">
+                        <div class="sidebar-item active" onclick="scrollToSection('vault')">🏦 Vault Operations</div>
+                        <div class="sidebar-item" onclick="scrollToSection('gateway')">🔗 Circle Gateway</div>
+                        <div class="sidebar-item" onclick="scrollToSection('x402')">⚡ x402 Protocol</div>
+                        <div class="sidebar-item" onclick="scrollToSection('demo')">🎮 Demo</div>
+                        <div class="sidebar-item" onclick="scrollToSection('receipts')">📄 Receipts</div>
+                        <div class="sidebar-item" onclick="scrollToSection('health')">💚 Health</div>
+                    </nav>
+
+                    <div class="mt-6 pt-6 border-t border-gray-700">
+                        <div class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-4">Base URL</div>
+                        <div class="px-4">
+                            <code class="text-electric text-sm font-mono">http://localhost:8000</code>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- API Endpoints -->
+            <main class="flex-1 space-y-8">
+
+                <!-- Vault Operations -->
+                <section id="vault" class="glass-card p-6">
+                    <div class="category-header">
+                        <div class="category-icon bg-gradient-to-br from-neon/30 to-electric/30">🏦</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Vault Operations</h2>
+                            <p class="text-gray-400 text-sm">Manage USDC deposits, withdrawals, and yield compounding</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- POST /vault/deposit -->
+                        <div class="endpoint-card" id="endpoint-deposit">
+                            <div class="endpoint-header" onclick="toggleEndpoint('deposit')">
+                                <span class="method-badge method-post">POST</span>
+                                <code class="text-white font-mono">/vault/deposit</code>
+                                <span class="text-gray-400 text-sm flex-1">Deposit USDC into the vault</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Request Body</h4>
+                                        <div class="code-block">
+                                            <button class="copy-btn" onclick="copyCode(this, 'deposit-req')">Copy</button>
+                                            <pre id="deposit-req">{
+  "amount": <span class="json-number">100.0</span>
+}</pre>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label class="text-sm text-gray-400 mb-2 block">Amount (USDC)</label>
+                                            <input type="number" class="input-field" id="deposit-amount" placeholder="100.0" step="0.01" min="0">
+                                        </div>
+                                        <button class="execute-btn mt-4 w-full" onclick="executeDeposit()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="deposit-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                        <div class="mt-4">
+                                            <h4 class="font-semibold mb-2 text-sm text-gray-300">cURL</h4>
+                                            <div class="code-block text-xs">
+                                                <button class="copy-btn" onclick="copyCode(this, 'deposit-curl')">Copy</button>
+                                                <pre id="deposit-curl">curl -X POST http://localhost:8000/vault/deposit \
+  -H "Content-Type: application/json" \
+  -d '{"amount": 100.0}'</pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- POST /vault/withdraw -->
+                        <div class="endpoint-card" id="endpoint-withdraw">
+                            <div class="endpoint-header" onclick="toggleEndpoint('withdraw')">
+                                <span class="method-badge method-post">POST</span>
+                                <code class="text-white font-mono">/vault/withdraw</code>
+                                <span class="text-gray-400 text-sm flex-1">Withdraw shares from the vault</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Request Body</h4>
+                                        <div class="code-block">
+                                            <pre>{
+  "shares": <span class="json-number">50.0</span>
+}</pre>
+                                        </div>
+                                        <div class="mt-4">
+                                            <label class="text-sm text-gray-400 mb-2 block">Shares</label>
+                                            <input type="number" class="input-field" id="withdraw-shares" placeholder="50.0" step="0.01" min="0">
+                                        </div>
+                                        <button class="execute-btn mt-4 w-full" onclick="executeWithdraw()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="withdraw-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- POST /vault/compound -->
+                        <div class="endpoint-card" id="endpoint-compound">
+                            <div class="endpoint-header" onclick="toggleEndpoint('compound')">
+                                <span class="method-badge method-post">POST</span>
+                                <code class="text-white font-mono">/vault/compound</code>
+                                <span class="text-gray-400 text-sm flex-1">Trigger auto-compound of yields</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Request</h4>
+                                        <p class="text-gray-400 text-sm mb-4">No request body required</p>
+                                        <button class="execute-btn w-full" onclick="executeCompound()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="compound-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GET /vault/balance -->
+                        <div class="endpoint-card" id="endpoint-balance">
+                            <div class="endpoint-header" onclick="toggleEndpoint('balance')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/vault/balance</code>
+                                <span class="text-gray-400 text-sm flex-1">Get current vault and USDC balance</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <button class="execute-btn w-full" onclick="executeGetBalance()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="balance-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Circle Gateway -->
+                <section id="gateway" class="glass-card p-6">
+                    <div class="category-header">
+                        <div class="category-icon bg-gradient-to-br from-electric/30 to-purple/30">🔗</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Circle Gateway</h2>
+                            <p class="text-gray-400 text-sm">USDC transfers via Circle's payment infrastructure</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- POST /gateway/transfer -->
+                        <div class="endpoint-card" id="endpoint-gateway-transfer">
+                            <div class="endpoint-header" onclick="toggleEndpoint('gateway-transfer')">
+                                <span class="method-badge method-post">POST</span>
+                                <code class="text-white font-mono">/gateway/transfer</code>
+                                <span class="text-gray-400 text-sm flex-1">Transfer USDC to an address</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Request Body</h4>
+                                        <div class="code-block">
+                                            <pre>{
+  "destination_address": <span class="json-string">"0x742d35..."</span>,
+  "amount": <span class="json-number">10.0</span>
+}</pre>
+                                        </div>
+                                        <div class="mt-4 space-y-3">
+                                            <div>
+                                                <label class="text-sm text-gray-400 mb-2 block">Destination Address</label>
+                                                <input type="text" class="input-field" id="transfer-address" placeholder="0x...">
+                                            </div>
+                                            <div>
+                                                <label class="text-sm text-gray-400 mb-2 block">Amount (USDC)</label>
+                                                <input type="number" class="input-field" id="transfer-amount" placeholder="10.0" step="0.01" min="0">
+                                            </div>
+                                        </div>
+                                        <button class="execute-btn mt-4 w-full" onclick="executeGatewayTransfer()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="gateway-transfer-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GET /gateway/balance -->
+                        <div class="endpoint-card" id="endpoint-gateway-balance">
+                            <div class="endpoint-header" onclick="toggleEndpoint('gateway-balance')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/gateway/balance</code>
+                                <span class="text-gray-400 text-sm flex-1">Get Circle Gateway wallet balance</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <button class="execute-btn w-full" onclick="executeGatewayBalance()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="gateway-balance-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- x402 Protocol -->
+                <section id="x402" class="glass-card p-6">
+                    <div class="category-header">
+                        <div class="category-icon bg-gradient-to-br from-purple/30 to-neon/30">⚡</div>
+                        <div>
+                            <h2 class="text-xl font-bold">x402 Protocol</h2>
+                            <p class="text-gray-400 text-sm">Autonomous AI agent payments for paywalled services</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- POST /x402/access -->
+                        <div class="endpoint-card" id="endpoint-x402-access">
+                            <div class="endpoint-header" onclick="toggleEndpoint('x402-access')">
+                                <span class="method-badge method-post">POST</span>
+                                <code class="text-white font-mono">/x402/access</code>
+                                <span class="text-gray-400 text-sm flex-1">Access a paid service with auto-payment</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Request Body</h4>
+                                        <div class="code-block">
+                                            <pre>{
+  "url": <span class="json-string">"https://api.example.com/data"</span>,
+  "method": <span class="json-string">"GET"</span>,
+  "auto_pay": <span class="json-boolean">true</span>
+}</pre>
+                                        </div>
+                                        <div class="mt-4 space-y-3">
+                                            <div>
+                                                <label class="text-sm text-gray-400 mb-2 block">URL</label>
+                                                <input type="text" class="input-field" id="x402-url" placeholder="https://...">
+                                            </div>
+                                            <div>
+                                                <label class="text-sm text-gray-400 mb-2 block">Auto Pay</label>
+                                                <select class="input-field" id="x402-autopay">
+                                                    <option value="true">Yes</option>
+                                                    <option value="false">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button class="execute-btn mt-4 w-full" onclick="executeX402Access()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="x402-access-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GET /x402/history -->
+                        <div class="endpoint-card" id="endpoint-x402-history">
+                            <div class="endpoint-header" onclick="toggleEndpoint('x402-history')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/x402/history</code>
+                                <span class="text-gray-400 text-sm flex-1">Get autonomous payment history</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <button class="execute-btn w-full" onclick="executeX402History()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="x402-history-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Demo -->
+                <section id="demo" class="glass-card p-6">
+                    <div class="category-header">
+                        <div class="category-icon bg-gradient-to-br from-yellow-500/30 to-orange-500/30">🎮</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Demo Endpoints</h2>
+                            <p class="text-gray-400 text-sm">Test the x402 autonomous payment flow</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- GET /demo/paywall -->
+                        <div class="endpoint-card" id="endpoint-demo-paywall">
+                            <div class="endpoint-header" onclick="toggleEndpoint('demo-paywall')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/demo/paywall</code>
+                                <span class="text-gray-400 text-sm flex-1">Mock 402 Payment Required endpoint</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-4">
+                                    <div class="flex items-center gap-2 text-yellow-400 text-sm">
+                                        <span>⚠️</span>
+                                        <span>This endpoint returns HTTP 402 Payment Required with x402 headers</span>
+                                    </div>
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <button class="execute-btn w-full" onclick="executeDemoPaywall()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="demo-paywall-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GET /demo/paywall/test-auto -->
+                        <div class="endpoint-card" id="endpoint-demo-auto">
+                            <div class="endpoint-header" onclick="toggleEndpoint('demo-auto')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/demo/paywall/test-auto</code>
+                                <span class="text-gray-400 text-sm flex-1">Test full autonomous payment flow</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="bg-neon/10 border border-neon/30 rounded-lg p-4 mb-4">
+                                    <div class="flex items-center gap-2 text-neon text-sm">
+                                        <span>🚀</span>
+                                        <span>Demonstrates the complete x402 flow: 402 → Auto Pay → Access Granted</span>
+                                    </div>
+                                </div>
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <button class="execute-btn w-full" onclick="executeDemoAuto()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="demo-auto-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Receipts -->
+                <section id="receipts" class="glass-card p-6">
+                    <div class="category-header">
+                        <div class="category-icon bg-gradient-to-br from-purple/30 to-pink-500/30">📄</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Receipts</h2>
+                            <p class="text-gray-400 text-sm">Transaction receipt management</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- GET /receipts -->
+                        <div class="endpoint-card" id="endpoint-receipts-list">
+                            <div class="endpoint-header" onclick="toggleEndpoint('receipts-list')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/receipts</code>
+                                <span class="text-gray-400 text-sm flex-1">List all generated receipts</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <button class="execute-btn w-full" onclick="executeReceiptsList()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="receipts-list-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GET /receipts/{filename} -->
+                        <div class="endpoint-card" id="endpoint-receipts-download">
+                            <div class="endpoint-header" onclick="toggleEndpoint('receipts-download')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/receipts/{filename}</code>
+                                <span class="text-gray-400 text-sm flex-1">Download a specific receipt PDF</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <label class="text-sm text-gray-400 mb-2 block">Filename</label>
+                                        <input type="text" class="input-field" id="receipt-filename" placeholder="receipt_deposit_20260121.pdf">
+                                        <button class="execute-btn mt-4 w-full" onclick="downloadReceipt()">
+                                            Download PDF
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">The PDF file will be downloaded directly to your browser.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Health -->
+                <section id="health" class="glass-card p-6">
+                    <div class="category-header">
+                        <div class="category-icon bg-gradient-to-br from-neon/30 to-teal-500/30">💚</div>
+                        <div>
+                            <h2 class="text-xl font-bold">Health Check</h2>
+                            <p class="text-gray-400 text-sm">API status and configuration</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="endpoint-card" id="endpoint-health">
+                            <div class="endpoint-header" onclick="toggleEndpoint('health')">
+                                <span class="method-badge method-get">GET</span>
+                                <code class="text-white font-mono">/health</code>
+                                <span class="text-gray-400 text-sm flex-1">Health check and API info</span>
+                                <svg class="w-5 h-5 text-gray-500 transform transition-transform endpoint-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                            </div>
+                            <div class="endpoint-body">
+                                <div class="grid md:grid-cols-2 gap-6 mt-4">
+                                    <div>
+                                        <button class="execute-btn w-full" onclick="executeHealth()">
+                                            Execute Request
+                                        </button>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-3 text-sm text-gray-300">Response</h4>
+                                        <div class="response-area" id="health-response">
+                                            <span class="text-gray-500">Response will appear here...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center py-8 mt-12 border-t border-gray-800">
+            <p class="text-gray-400 mb-4">Built for <span class="text-electric">Agentic Commerce on Arc</span> Hackathon</p>
+            <div class="flex items-center justify-center gap-4 text-sm text-gray-500">
+                <a href="/" class="hover:text-electric transition-colors">Dashboard</a>
+                <span>•</span>
+                <a href="/swagger" class="hover:text-electric transition-colors">Swagger UI</a>
+                <span>•</span>
+                <span>By AbdelAziz</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // Toggle endpoint expansion
+        function toggleEndpoint(id) {
+            const card = document.getElementById(`endpoint-${id}`);
+            const arrow = card.querySelector('.endpoint-arrow');
+
+            card.classList.toggle('expanded');
+            arrow.style.transform = card.classList.contains('expanded') ? 'rotate(180deg)' : 'rotate(0)';
+        }
+
+        // Scroll to section
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+
+            // Update sidebar
+            document.querySelectorAll('.sidebar-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Format JSON with syntax highlighting
+        function formatJson(obj) {
+            const json = JSON.stringify(obj, null, 2);
+            return json
+                .replace(/"([^"]+)":/g, '<span class="json-key">"$1"</span>:')
+                .replace(/: "([^"]+)"/g, ': <span class="json-string">"$1"</span>')
+                .replace(/: (\d+\.?\d*)/g, ': <span class="json-number">$1</span>')
+                .replace(/: (true|false)/g, ': <span class="json-boolean">$1</span>')
+                .replace(/: null/g, ': <span class="json-null">null</span>');
+        }
+
+        // Display response
+        function displayResponse(elementId, data, isError = false) {
+            const el = document.getElementById(elementId);
+            el.classList.toggle('error', isError);
+            el.innerHTML = `<pre>${formatJson(data)}</pre>`;
+        }
+
+        // Copy code
+        function copyCode(btn, elementId) {
+            const code = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(code);
+            btn.textContent = 'Copied!';
+            setTimeout(() => btn.textContent = 'Copy', 2000);
+        }
+
+        // API Calls
+        async function apiCall(method, endpoint, body = null) {
+            const options = {
+                method,
+                headers: { 'Content-Type': 'application/json' }
+            };
+            if (body) options.body = JSON.stringify(body);
+
+            const response = await fetch(endpoint, options);
+            return response.json();
+        }
+
+        // Vault endpoints
+        async function executeDeposit() {
+            const amount = parseFloat(document.getElementById('deposit-amount').value) || 100;
+            try {
+                const data = await apiCall('POST', '/vault/deposit', { amount });
+                displayResponse('deposit-response', data);
+            } catch (e) {
+                displayResponse('deposit-response', { error: e.message }, true);
+            }
+        }
+
+        async function executeWithdraw() {
+            const shares = parseFloat(document.getElementById('withdraw-shares').value) || 50;
+            try {
+                const data = await apiCall('POST', '/vault/withdraw', { shares });
+                displayResponse('withdraw-response', data);
+            } catch (e) {
+                displayResponse('withdraw-response', { error: e.message }, true);
+            }
+        }
+
+        async function executeCompound() {
+            try {
+                const data = await apiCall('POST', '/vault/compound');
+                displayResponse('compound-response', data);
+            } catch (e) {
+                displayResponse('compound-response', { error: e.message }, true);
+            }
+        }
+
+        async function executeGetBalance() {
+            try {
+                const data = await apiCall('GET', '/vault/balance');
+                displayResponse('balance-response', data);
+            } catch (e) {
+                displayResponse('balance-response', { error: e.message }, true);
+            }
+        }
+
+        // Gateway endpoints
+        async function executeGatewayTransfer() {
+            const destination_address = document.getElementById('transfer-address').value || '0x742d35Cc6634C0532925a3b844Bc9e7595f8fE21';
+            const amount = parseFloat(document.getElementById('transfer-amount').value) || 10;
+            try {
+                const data = await apiCall('POST', '/gateway/transfer', { destination_address, amount });
+                displayResponse('gateway-transfer-response', data);
+            } catch (e) {
+                displayResponse('gateway-transfer-response', { error: e.message }, true);
+            }
+        }
+
+        async function executeGatewayBalance() {
+            try {
+                const data = await apiCall('GET', '/gateway/balance');
+                displayResponse('gateway-balance-response', data);
+            } catch (e) {
+                displayResponse('gateway-balance-response', { error: e.message }, true);
+            }
+        }
+
+        // x402 endpoints
+        async function executeX402Access() {
+            const url = document.getElementById('x402-url').value || 'http://localhost:8000/demo/paywall';
+            const auto_pay = document.getElementById('x402-autopay').value === 'true';
+            try {
+                const data = await apiCall('POST', '/x402/access', { url, method: 'GET', auto_pay });
+                displayResponse('x402-access-response', data);
+            } catch (e) {
+                displayResponse('x402-access-response', { error: e.message }, true);
+            }
+        }
+
+        async function executeX402History() {
+            try {
+                const data = await apiCall('GET', '/x402/history');
+                displayResponse('x402-history-response', data);
+            } catch (e) {
+                displayResponse('x402-history-response', { error: e.message }, true);
+            }
+        }
+
+        // Demo endpoints
+        async function executeDemoPaywall() {
+            try {
+                const data = await apiCall('GET', '/demo/paywall');
+                displayResponse('demo-paywall-response', data);
+            } catch (e) {
+                displayResponse('demo-paywall-response', { error: e.message }, true);
+            }
+        }
+
+        async function executeDemoAuto() {
+            try {
+                const data = await apiCall('GET', '/demo/paywall/test-auto');
+                displayResponse('demo-auto-response', data);
+            } catch (e) {
+                displayResponse('demo-auto-response', { error: e.message }, true);
+            }
+        }
+
+        // Receipts endpoints
+        async function executeReceiptsList() {
+            try {
+                const data = await apiCall('GET', '/receipts');
+                displayResponse('receipts-list-response', data);
+            } catch (e) {
+                displayResponse('receipts-list-response', { error: e.message }, true);
+            }
+        }
+
+        function downloadReceipt() {
+            const filename = document.getElementById('receipt-filename').value;
+            if (filename) {
+                window.open(`/receipts/${filename}`, '_blank');
+            }
+        }
+
+        // Health endpoint
+        async function executeHealth() {
+            try {
+                const data = await apiCall('GET', '/health');
+                displayResponse('health-response', data);
+            } catch (e) {
+                displayResponse('health-response', { error: e.message }, true);
+            }
+        }
+
+        // Initialize - auto-execute health check
+        document.addEventListener('DOMContentLoaded', () => {
+            executeHealth();
+        });
+    </script>
+</body>
+</html>

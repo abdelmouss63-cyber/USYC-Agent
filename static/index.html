@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USYC Protocol Labs | Autonomous AI Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#1E3A5F',
+                        'navy-light': '#2a4a73',
+                        'navy-dark': '#152942',
+                        electric: '#3498DB',
+                        neon: '#2ECC71',
+                        purple: '#9B59B6',
+                        'dark-bg': '#0a0f1a',
+                        'dark-card': '#111827',
+                    },
+                    fontFamily: {
+                        'space': ['Space Grotesk', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: #0a0f1a;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0a0f1a 0%, #1E3A5F 50%, #0a0f1a 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Grid Pattern Overlay */
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background-image:
+                linear-gradient(rgba(52, 152, 219, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(52, 152, 219, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(52, 152, 219, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(52, 152, 219, 0.5);
+            box-shadow: 0 25px 50px -12px rgba(52, 152, 219, 0.25);
+        }
+
+        /* Glowing Text */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(52, 152, 219, 0.5),
+                         0 0 40px rgba(52, 152, 219, 0.3),
+                         0 0 60px rgba(52, 152, 219, 0.1);
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #3498DB 0%, #2ECC71 50%, #9B59B6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Status Pulse */
+        .status-pulse {
+            width: 12px;
+            height: 12px;
+            background: #2ECC71;
+            border-radius: 50%;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        .status-pulse::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            width: 20px;
+            height: 20px;
+            background: rgba(46, 204, 113, 0.4);
+            border-radius: 50%;
+            animation: pulseRing 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes pulseRing {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Glowing Button */
+        .glow-btn {
+            position: relative;
+            background: linear-gradient(135deg, #3498DB, #2ECC71);
+            border: none;
+            border-radius: 16px;
+            padding: 20px 48px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.5),
+                        0 0 60px rgba(46, 204, 113, 0.3);
+        }
+
+        .glow-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .glow-btn:hover::before {
+            left: 100%;
+        }
+
+        .glow-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(52, 152, 219, 0.8),
+                        0 0 100px rgba(46, 204, 113, 0.5);
+        }
+
+        .glow-btn:active {
+            transform: scale(0.98);
+        }
+
+        .glow-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Terminal Style */
+        .terminal {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            border-radius: 16px;
+            font-family: 'JetBrains Mono', monospace;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: rgba(46, 204, 113, 0.1);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-body {
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            font-size: 0.875rem;
+            line-height: 1.8;
+        }
+
+        .terminal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terminal-body::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: rgba(46, 204, 113, 0.5);
+            border-radius: 3px;
+        }
+
+        .log-entry {
+            opacity: 0;
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Stats Number Animation */
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #3498DB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Feature Card Icons */
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.2), rgba(46, 204, 113, 0.2));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 16px;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        /* Flow Animation */
+        .flow-step {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            background: rgba(17, 24, 39, 0.5);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s ease;
+            opacity: 0.5;
+        }
+
+        .flow-step.active {
+            opacity: 1;
+            border-left-color: #3498DB;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .flow-step.complete {
+            opacity: 1;
+            border-left-color: #2ECC71;
+            background: rgba(46, 204, 113, 0.1);
+        }
+
+        .flow-step.error {
+            border-left-color: #E74C3C;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(52, 152, 219, 0.2);
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .flow-step.complete .step-icon {
+            background: rgba(46, 204, 113, 0.3);
+        }
+
+        /* Spinner */
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-top-color: #3498DB;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Count Up Animation */
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .stat-number {
+                font-size: 1.75rem;
+            }
+            .glow-btn {
+                padding: 16px 32px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Logo Placeholder */
+        .logo-placeholder {
+            width: 100px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Neon Border Animation */
+        .neon-border {
+            position: relative;
+        }
+
+        .neon-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #3498DB, #2ECC71, #9B59B6, #3498DB);
+            background-size: 400% 400%;
+            border-radius: 26px;
+            z-index: -1;
+            animation: borderGlow 3s ease infinite;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .neon-border:hover::before {
+            opacity: 1;
+        }
+
+        @keyframes borderGlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Success Checkmark */
+        .checkmark {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2ECC71, #27ae60);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        /* Modal Animation */
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .animate-modalIn {
+            animation: modalIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Receipt Item */
+        .receipt-item {
+            background: rgba(17, 24, 39, 0.5);
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .receipt-item:hover {
+            background: rgba(52, 152, 219, 0.1);
+            border-color: rgba(52, 152, 219, 0.4);
+            transform: translateX(5px);
+        }
+
+        .receipt-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.3), rgba(52, 152, 219, 0.3));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .receipt-item.deposit .receipt-icon {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.3), rgba(52, 152, 219, 0.3));
+        }
+
+        .receipt-item.withdraw .receipt-icon {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(155, 89, 182, 0.3));
+        }
+
+        .receipt-item.compound .receipt-icon {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.3), rgba(46, 204, 113, 0.3));
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 16px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+    <div class="grid-pattern"></div>
+    <div class="particles" id="particles"></div>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Hero Header -->
+        <header class="text-center py-12 mb-8">
+            <div class="flex items-center justify-center gap-3 mb-6">
+                <div class="status-pulse" id="statusIndicator"></div>
+                <span class="text-sm text-gray-400" id="statusText">Connected to Arc Testnet</span>
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 glow-text">
+                <span class="gradient-text">USYC Protocol Labs</span>
+            </h1>
+            <p class="text-xl md:text-2xl text-gray-400 mb-2">
+                Autonomous AI Agent with Circle Gateway & x402
+            </p>
+            <p class="text-sm text-gray-500">
+                Agentic Commerce on Arc | DeFi Yield Optimization
+            </p>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <!-- Gateway Balance -->
+            <div class="glass-card neon-border p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-electric to-purple flex items-center justify-center">
+                        <span class="text-xl">💎</span>
+                    </div>
+                    <span class="text-gray-400 text-sm font-medium">Gateway Balance</span>
+                </div>
+                <div class="stat-number" id="gatewayBalance">--</div>
+                <div class="text-gray-500 text-sm mt-1">USDC</div>
+                <div class="mt-4 h-1 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-electric to-neon w-3/4 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- Vault Balance -->
+            <div class="glass-card neon-border p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-neon to-electric flex items-center justify-center">
+                        <span class="text-xl">🏦</span>
+                    </div>
+                    <span class="text-gray-400 text-sm font-medium">Vault Balance</span>
+                </div>
+                <div class="stat-number" id="vaultBalance">--</div>
+                <div class="text-gray-500 text-sm mt-1">
+                    <span id="vaultShares">0</span> shares
+                </div>
+                <div class="mt-4 h-1 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-neon to-purple w-1/2 rounded-full"></div>
+                </div>
+            </div>
+
+            <!-- x402 Payments -->
+            <div class="glass-card neon-border p-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-purple to-electric flex items-center justify-center">
+                        <span class="text-xl">⚡</span>
+                    </div>
+                    <span class="text-gray-400 text-sm font-medium">x402 Payments</span>
+                </div>
+                <div class="stat-number" id="paymentCount">0</div>
+                <div class="text-gray-500 text-sm mt-1">
+                    <span id="totalSpent">0.00</span> USDC spent
+                </div>
+                <div class="mt-4 h-1 bg-gray-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-purple to-neon rounded-full" id="paymentBar" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Action Section -->
+        <div class="glass-card p-8 mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold mb-2">Autonomous Payment Demo</h2>
+                <p class="text-gray-400">Watch the AI agent automatically pay for paywalled content using x402 protocol</p>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Left: Button and Flow -->
+                <div class="flex-1">
+                    <div class="text-center mb-8">
+                        <button class="glow-btn" id="testPaymentBtn" onclick="testAutonomousPayment()">
+                            <span id="btnText">🚀 Test Autonomous Payment</span>
+                        </button>
+                    </div>
+
+                    <!-- Flow Visualization -->
+                    <div id="flowVisualization" class="space-y-3">
+                        <div class="flow-step" id="step1">
+                            <div class="step-icon">1️⃣</div>
+                            <div>
+                                <div class="font-medium">Accessing Paywall</div>
+                                <div class="text-sm text-gray-400">GET /demo/paywall</div>
+                            </div>
+                            <div class="ml-auto" id="step1Status"></div>
+                        </div>
+                        <div class="flow-step" id="step2">
+                            <div class="step-icon">2️⃣</div>
+                            <div>
+                                <div class="font-medium">402 Payment Required</div>
+                                <div class="text-sm text-gray-400">0.10 USDC to access content</div>
+                            </div>
+                            <div class="ml-auto" id="step2Status"></div>
+                        </div>
+                        <div class="flow-step" id="step3">
+                            <div class="step-icon">3️⃣</div>
+                            <div>
+                                <div class="font-medium">Circle Gateway Transfer</div>
+                                <div class="text-sm text-gray-400">Autonomous USDC payment</div>
+                            </div>
+                            <div class="ml-auto" id="step3Status"></div>
+                        </div>
+                        <div class="flow-step" id="step4">
+                            <div class="step-icon">4️⃣</div>
+                            <div>
+                                <div class="font-medium">Access Granted</div>
+                                <div class="text-sm text-gray-400">Premium content unlocked!</div>
+                            </div>
+                            <div class="ml-auto" id="step4Status"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Terminal -->
+                <div class="flex-1">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dot bg-red-500"></div>
+                            <div class="terminal-dot bg-yellow-500"></div>
+                            <div class="terminal-dot bg-green-500"></div>
+                            <span class="text-gray-400 text-sm ml-2 font-mono">x402-agent.log</span>
+                        </div>
+                        <div class="terminal-body" id="terminalOutput">
+                            <div class="text-neon mb-2">$ USYC Protocol Labs - x402 Agent</div>
+                            <div class="text-gray-500">Ready for autonomous payments...</div>
+                            <div class="text-gray-500">───────────────────────────────</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Display -->
+            <div id="resultDisplay" class="hidden mt-8 p-6 bg-gradient-to-r from-neon/10 to-electric/10 rounded-2xl border border-neon/30">
+                <div class="flex items-center gap-4 mb-4">
+                    <div class="checkmark">
+                        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                            <path d="M20 6L9 17l-5-5"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-neon">Payment Successful!</h3>
+                        <p class="text-gray-400">Premium content unlocked via autonomous x402 payment</p>
+                    </div>
+                </div>
+                <div class="bg-black/30 rounded-xl p-4 font-mono text-sm" id="resultContent">
+                    <!-- Result will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="glass-card p-6 text-center">
+                <div class="feature-icon mx-auto">🔗</div>
+                <h3 class="font-bold mb-2">Circle Gateway</h3>
+                <p class="text-gray-400 text-sm">Seamless USDC transfers via Circle's payment infrastructure</p>
+            </div>
+            <div class="glass-card p-6 text-center">
+                <div class="feature-icon mx-auto">💸</div>
+                <h3 class="font-bold mb-2">x402 Protocol</h3>
+                <p class="text-gray-400 text-sm">HTTP 402 Payment Required handling for autonomous commerce</p>
+            </div>
+            <div class="glass-card p-6 text-center">
+                <div class="feature-icon mx-auto">🤖</div>
+                <h3 class="font-bold mb-2">Autonomous Agent</h3>
+                <p class="text-gray-400 text-sm">AI-powered payments without human intervention</p>
+            </div>
+            <div class="glass-card p-6 text-center">
+                <div class="feature-icon mx-auto">📄</div>
+                <h3 class="font-bold mb-2">PDF Receipts</h3>
+                <p class="text-gray-400 text-sm">Automatic receipt generation with QR codes</p>
+            </div>
+        </div>
+
+        <!-- Transaction Receipts Section -->
+        <div class="glass-card p-8 mb-12">
+            <div class="flex flex-col md:flex-row items-center justify-between mb-6">
+                <div>
+                    <h2 class="text-2xl font-bold mb-2">Transaction Receipts</h2>
+                    <p class="text-gray-400">PDF receipts are automatically generated for each transaction</p>
+                </div>
+                <div class="flex items-center gap-2 text-sm mt-4 md:mt-0">
+                    <span class="text-gray-500">Total:</span>
+                    <span class="px-3 py-1 bg-purple/20 text-purple rounded-full font-medium" id="receiptCount">0 receipts</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-4">
+                <button onclick="openReceiptsModal()" class="flex-1 flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-navy-light to-navy rounded-xl border border-electric/30 hover:border-electric/60 transition-all hover:scale-[1.02] group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">📄</span>
+                    <div class="text-left">
+                        <div class="font-semibold">View All Receipts</div>
+                        <div class="text-xs text-gray-400">Browse transaction history</div>
+                    </div>
+                    <svg class="w-5 h-5 text-electric ml-auto opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+
+                <button onclick="openLatestReceipt()" class="flex-1 flex items-center justify-center gap-3 px-6 py-4 bg-gradient-to-r from-neon/20 to-electric/20 rounded-xl border border-neon/30 hover:border-neon/60 transition-all hover:scale-[1.02] group">
+                    <span class="text-2xl group-hover:scale-110 transition-transform">⚡</span>
+                    <div class="text-left">
+                        <div class="font-semibold text-neon">View Latest Receipt</div>
+                        <div class="text-xs text-gray-400">Open most recent PDF</div>
+                    </div>
+                    <svg class="w-5 h-5 text-neon ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Recent Receipts Preview -->
+            <div class="mt-6 pt-6 border-t border-gray-700/50">
+                <div class="text-sm text-gray-400 mb-3">Recent Receipts</div>
+                <div id="recentReceiptsPreview" class="space-y-2">
+                    <div class="text-gray-500 text-sm italic">Loading receipts...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Receipts Modal -->
+        <div id="receiptsModal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeReceiptsModal()"></div>
+            <div class="absolute inset-4 md:inset-10 lg:inset-20 flex items-center justify-center">
+                <div class="glass-card w-full max-w-3xl max-h-full overflow-hidden flex flex-col animate-modalIn">
+                    <!-- Modal Header -->
+                    <div class="p-6 border-b border-gray-700/50 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-purple to-electric flex items-center justify-center">
+                                <span class="text-xl">📄</span>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold">Transaction Receipts</h3>
+                                <p class="text-sm text-gray-400">All generated PDF receipts</p>
+                            </div>
+                        </div>
+                        <button onclick="closeReceiptsModal()" class="w-10 h-10 rounded-xl bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition-colors">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div class="p-6 overflow-y-auto flex-1" id="receiptsModalBody">
+                        <div class="flex items-center justify-center py-12">
+                            <div class="spinner"></div>
+                            <span class="ml-3 text-gray-400">Loading receipts...</span>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="p-4 border-t border-gray-700/50 bg-navy/30">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-400">Receipts are stored in <code class="text-electric">/receipts</code> folder</span>
+                            <button onclick="refreshReceipts()" class="px-4 py-2 bg-electric/20 text-electric rounded-lg hover:bg-electric/30 transition-colors flex items-center gap-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Architecture Section -->
+        <div class="glass-card p-8 mb-12">
+            <h2 class="text-2xl font-bold mb-6 text-center">How It Works</h2>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4 text-center">
+                <div class="bg-navy/50 rounded-xl p-4 flex-1 max-w-[200px]">
+                    <div class="text-3xl mb-2">🤖</div>
+                    <div class="font-medium">AI Agent</div>
+                    <div class="text-xs text-gray-400">Requests resource</div>
+                </div>
+                <div class="text-2xl text-electric">→</div>
+                <div class="bg-navy/50 rounded-xl p-4 flex-1 max-w-[200px]">
+                    <div class="text-3xl mb-2">🚫</div>
+                    <div class="font-medium">402 Response</div>
+                    <div class="text-xs text-gray-400">Payment required</div>
+                </div>
+                <div class="text-2xl text-electric">→</div>
+                <div class="bg-navy/50 rounded-xl p-4 flex-1 max-w-[200px]">
+                    <div class="text-3xl mb-2">💳</div>
+                    <div class="font-medium">Auto Payment</div>
+                    <div class="text-xs text-gray-400">Via Circle Gateway</div>
+                </div>
+                <div class="text-2xl text-neon">→</div>
+                <div class="bg-navy/50 rounded-xl p-4 flex-1 max-w-[200px]">
+                    <div class="text-3xl mb-2">✅</div>
+                    <div class="font-medium">Access Granted</div>
+                    <div class="text-xs text-gray-400">Content unlocked</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contract Info -->
+        <div class="glass-card p-6 mb-12">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div>
+                    <div class="text-gray-400 text-sm mb-1">Vault Contract</div>
+                    <div class="font-mono text-electric">0x2f685b5Ef138Ac54F4CB1155A9C5922c5A58eD25</div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="px-3 py-1 bg-neon/20 text-neon rounded-full text-sm">Arc Testnet</span>
+                    <span class="px-3 py-1 bg-electric/20 text-electric rounded-full text-sm">ERC-4626</span>
+                    <span class="px-3 py-1 bg-purple/20 text-purple rounded-full text-sm">Circle Whitelisted</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center py-8 border-t border-gray-800">
+            <p class="text-gray-400 mb-6">Built for <span class="text-electric">Agentic Commerce on Arc</span> Hackathon</p>
+            <div class="flex items-center justify-center gap-8 mb-6">
+                <div class="logo-placeholder">Circle</div>
+                <div class="logo-placeholder">Arc</div>
+                <div class="logo-placeholder">lablab.ai</div>
+            </div>
+            <div class="flex items-center justify-center gap-4 text-sm text-gray-500">
+                <a href="https://github.com" class="hover:text-electric transition-colors">GitHub</a>
+                <span>•</span>
+                <a href="/docs" class="hover:text-electric transition-colors">API Docs</a>
+                <span>•</span>
+                <span>By AbdelAziz</span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Format number with animation
+        function animateNumber(element, target, decimals = 2, suffix = '') {
+            const duration = 1000;
+            const start = parseFloat(element.textContent) || 0;
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                const current = start + (target - start) * easeProgress;
+                element.textContent = current.toFixed(decimals) + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            requestAnimationFrame(update);
+        }
+
+        // Fetch and update stats
+        async function updateStats() {
+            try {
+                // Gateway balance
+                const gatewayRes = await fetch('/gateway/balance');
+                const gatewayData = await gatewayRes.json();
+                const gatewayBalance = gatewayData.balance?.USDC || 0;
+                animateNumber(document.getElementById('gatewayBalance'), gatewayBalance);
+
+                // Vault balance
+                const vaultRes = await fetch('/vault/balance');
+                const vaultData = await vaultRes.json();
+                animateNumber(document.getElementById('vaultBalance'), vaultData.usdc_balance || 0);
+                document.getElementById('vaultShares').textContent = (vaultData.vault_shares || 0).toFixed(2);
+
+                // x402 history
+                const historyRes = await fetch('/x402/history');
+                const historyData = await historyRes.json();
+                animateNumber(document.getElementById('paymentCount'), historyData.payment_count || 0, 0);
+                animateNumber(document.getElementById('totalSpent'), historyData.total_spent || 0);
+
+                const barWidth = Math.min((historyData.payment_count || 0) * 10, 100);
+                document.getElementById('paymentBar').style.width = barWidth + '%';
+
+                // Update status
+                document.getElementById('statusText').textContent = 'Connected to Arc Testnet';
+                document.getElementById('statusIndicator').style.background = '#2ECC71';
+
+            } catch (error) {
+                console.error('Failed to fetch stats:', error);
+                document.getElementById('statusText').textContent = 'Connection error';
+                document.getElementById('statusIndicator').style.background = '#E74C3C';
+            }
+        }
+
+        // Terminal logging
+        function addLog(message, type = 'info') {
+            const terminal = document.getElementById('terminalOutput');
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: 'text-gray-400',
+                success: 'text-neon',
+                warning: 'text-yellow-400',
+                error: 'text-red-400',
+                highlight: 'text-electric'
+            };
+
+            entry.innerHTML = `<span class="text-gray-600">[${timestamp}]</span> <span class="${colors[type]}">${message}</span>`;
+            terminal.appendChild(entry);
+            terminal.scrollTop = terminal.scrollHeight;
+        }
+
+        // Update flow step
+        function updateStep(stepNum, status) {
+            const step = document.getElementById(`step${stepNum}`);
+            const statusEl = document.getElementById(`step${stepNum}Status`);
+
+            step.classList.remove('active', 'complete', 'error');
+
+            if (status === 'active') {
+                step.classList.add('active');
+                statusEl.innerHTML = '<div class="spinner"></div>';
+            } else if (status === 'complete') {
+                step.classList.add('complete');
+                statusEl.innerHTML = '<span class="text-neon text-xl">✓</span>';
+            } else if (status === 'error') {
+                step.classList.add('error');
+                statusEl.innerHTML = '<span class="text-red-400 text-xl">✗</span>';
+            } else {
+                statusEl.innerHTML = '';
+            }
+        }
+
+        // Reset flow
+        function resetFlow() {
+            for (let i = 1; i <= 4; i++) {
+                updateStep(i, 'pending');
+            }
+            document.getElementById('resultDisplay').classList.add('hidden');
+        }
+
+        // Test autonomous payment
+        async function testAutonomousPayment() {
+            const btn = document.getElementById('testPaymentBtn');
+            const btnText = document.getElementById('btnText');
+
+            btn.disabled = true;
+            btnText.textContent = '⏳ Processing...';
+            resetFlow();
+
+            try {
+                // Step 1: Accessing paywall
+                addLog('Initiating autonomous payment test...', 'highlight');
+                updateStep(1, 'active');
+                addLog('GET /demo/paywall', 'info');
+                await sleep(800);
+                updateStep(1, 'complete');
+                addLog('Request sent to paywall endpoint', 'success');
+
+                // Step 2: 402 detected
+                updateStep(2, 'active');
+                await sleep(600);
+                addLog('⚠️ HTTP 402 Payment Required detected!', 'warning');
+                addLog('Amount: 0.10 USDC | Network: ARC', 'info');
+                await sleep(400);
+                updateStep(2, 'complete');
+
+                // Step 3: Gateway transfer
+                updateStep(3, 'active');
+                addLog('Initiating Circle Gateway transfer...', 'highlight');
+                await sleep(500);
+                addLog('Transferring 0.10 USDC via Gateway...', 'info');
+
+                // Make actual API call
+                const response = await fetch('/demo/paywall/test-auto');
+                const data = await response.json();
+
+                await sleep(300);
+
+                if (data.success) {
+                    addLog('✓ Transfer complete: ' + (data.result?.body?.payment_info?.tx_hash || 'demo-tx'), 'success');
+                    updateStep(3, 'complete');
+
+                    // Step 4: Access granted
+                    updateStep(4, 'active');
+                    await sleep(400);
+                    addLog('Retrying request with payment proof...', 'info');
+                    await sleep(300);
+                    addLog('🎉 ACCESS GRANTED! Premium content unlocked!', 'success');
+                    updateStep(4, 'complete');
+
+                    // Show result
+                    const resultDisplay = document.getElementById('resultDisplay');
+                    const resultContent = document.getElementById('resultContent');
+
+                    const content = data.result?.body?.content || {};
+                    resultContent.innerHTML = `
+                        <div class="text-neon font-bold mb-2">${content.title || 'Premium Content'}</div>
+                        <div class="text-gray-400 mb-3">
+                            ${(content.data || []).map(item =>
+                                `<div>• ${item.strategy}: <span class="text-electric">${item.apy}</span></div>`
+                            ).join('')}
+                        </div>
+                        <div class="text-purple">${content.premium_feature || ''}</div>
+                        <div class="mt-3 pt-3 border-t border-gray-700 text-xs text-gray-500">
+                            TX: ${data.result?.body?.payment_info?.tx_hash || 'N/A'} |
+                            Paid: ${data.result?.body?.payment_info?.amount_paid || 0.10} USDC
+                        </div>
+                    `;
+
+                    resultDisplay.classList.remove('hidden');
+
+                    // Update stats
+                    updateStats();
+
+                } else {
+                    throw new Error(data.error || 'Payment failed');
+                }
+
+            } catch (error) {
+                addLog('❌ Error: ' + error.message, 'error');
+                updateStep(3, 'error');
+            }
+
+            btn.disabled = false;
+            btnText.textContent = '🚀 Test Autonomous Payment';
+        }
+
+        // Utility: sleep
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // ========== RECEIPTS SECTION ==========
+
+        let receiptsCache = [];
+
+        // Fetch receipts from API
+        async function fetchReceipts() {
+            try {
+                const response = await fetch('/receipts');
+                const data = await response.json();
+                receiptsCache = data.receipts || [];
+                return receiptsCache;
+            } catch (error) {
+                console.error('Failed to fetch receipts:', error);
+                return [];
+            }
+        }
+
+        // Format timestamp
+        function formatDate(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Get receipt type from filename
+        function getReceiptType(filename) {
+            if (filename.includes('deposit')) return 'deposit';
+            if (filename.includes('withdraw')) return 'withdraw';
+            if (filename.includes('compound')) return 'compound';
+            return 'transaction';
+        }
+
+        // Get receipt icon based on type
+        function getReceiptIcon(type) {
+            const icons = {
+                deposit: '📥',
+                withdraw: '📤',
+                compound: '🔄',
+                transaction: '📄'
+            };
+            return icons[type] || '📄';
+        }
+
+        // Get receipt label based on type
+        function getReceiptLabel(type) {
+            const labels = {
+                deposit: 'Deposit',
+                withdraw: 'Withdrawal',
+                compound: 'Compound',
+                transaction: 'Transaction'
+            };
+            return labels[type] || 'Transaction';
+        }
+
+        // Render receipt item HTML
+        function renderReceiptItem(receipt, compact = false) {
+            const type = getReceiptType(receipt.filename);
+            const icon = getReceiptIcon(type);
+            const label = getReceiptLabel(type);
+            const date = formatDate(receipt.created);
+
+            if (compact) {
+                return `
+                    <div class="flex items-center justify-between p-3 bg-navy/30 rounded-lg hover:bg-navy/50 transition-colors cursor-pointer" onclick="window.open('/receipts/${receipt.filename}', '_blank')">
+                        <div class="flex items-center gap-3">
+                            <span class="text-lg">${icon}</span>
+                            <span class="text-sm font-medium">${label}</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs text-gray-500">${date}</span>
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                            </svg>
+                        </div>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="receipt-item ${type}" onclick="window.open('/receipts/${receipt.filename}', '_blank')">
+                    <div class="receipt-icon">${icon}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium text-white">${label} Receipt</div>
+                        <div class="text-sm text-gray-400 truncate">${receipt.filename}</div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <div class="text-sm text-gray-300">${date}</div>
+                        <div class="text-xs text-electric">Click to open</div>
+                    </div>
+                    <svg class="w-5 h-5 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                    </svg>
+                </div>
+            `;
+        }
+
+        // Update recent receipts preview
+        async function updateReceiptsPreview() {
+            const receipts = await fetchReceipts();
+            const previewEl = document.getElementById('recentReceiptsPreview');
+            const countEl = document.getElementById('receiptCount');
+
+            countEl.textContent = `${receipts.length} receipt${receipts.length !== 1 ? 's' : ''}`;
+
+            if (receipts.length === 0) {
+                previewEl.innerHTML = `
+                    <div class="text-gray-500 text-sm italic py-2">
+                        No receipts yet. Make a transaction to generate one!
+                    </div>
+                `;
+                return;
+            }
+
+            // Show last 3 receipts
+            const recentReceipts = receipts.slice(0, 3);
+            previewEl.innerHTML = recentReceipts.map(r => renderReceiptItem(r, true)).join('');
+        }
+
+        // Open receipts modal
+        async function openReceiptsModal() {
+            const modal = document.getElementById('receiptsModal');
+            const body = document.getElementById('receiptsModalBody');
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Show loading
+            body.innerHTML = `
+                <div class="flex items-center justify-center py-12">
+                    <div class="spinner"></div>
+                    <span class="ml-3 text-gray-400">Loading receipts...</span>
+                </div>
+            `;
+
+            // Fetch and render receipts
+            const receipts = await fetchReceipts();
+
+            if (receipts.length === 0) {
+                body.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📄</div>
+                        <h3 class="text-lg font-medium text-gray-300 mb-2">No Receipts Yet</h3>
+                        <p class="text-gray-500">Transaction receipts will appear here after you make deposits, withdrawals, or compound operations.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            body.innerHTML = `
+                <div class="space-y-3">
+                    ${receipts.map(r => renderReceiptItem(r)).join('')}
+                </div>
+            `;
+        }
+
+        // Close receipts modal
+        function closeReceiptsModal() {
+            const modal = document.getElementById('receiptsModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Refresh receipts
+        async function refreshReceipts() {
+            await openReceiptsModal();
+            await updateReceiptsPreview();
+        }
+
+        // Open latest receipt
+        async function openLatestReceipt() {
+            const receipts = await fetchReceipts();
+
+            if (receipts.length === 0) {
+                alert('No receipts available yet. Make a transaction first!');
+                return;
+            }
+
+            // Open the most recent receipt (first in list)
+            window.open(`/receipts/${receipts[0].filename}`, '_blank');
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeReceiptsModal();
+            }
+        });
+
+        // ========== END RECEIPTS SECTION ==========
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStats();
+            updateReceiptsPreview();
+            setInterval(updateStats, 10000); // Refresh every 10s
+            setInterval(updateReceiptsPreview, 15000); // Refresh receipts every 15s
+            addLog('Dashboard initialized', 'success');
+            addLog('Waiting for commands...', 'info');
+        });
+    </script>
+</body>
+</html>
