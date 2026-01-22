@@ -151,33 +151,61 @@ def _generate_demo_page(
         }}
     </script>
     <style>
-        body {{ font-family: 'Space Grotesk', sans-serif; background: #0a0f1a; color: #fff; min-height: 100vh; }}
-        .glass-card {{ background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(52, 152, 219, 0.2); border-radius: 16px; }}
+        body {{ font-family: 'Space Grotesk', sans-serif; background: #0a0f1a; color: #fff; min-height: 100vh; overflow-x: hidden; }}
+        .glass-card {{ background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(52, 152, 219, 0.2); border-radius: 16px; transition: all 0.3s ease; }}
+        .glass-card:hover {{ border-color: rgba(52, 152, 219, 0.4); }}
         .gradient-text {{ background: linear-gradient(135deg, {c["primary"]} 0%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }}
+        .bg-animated {{ position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: linear-gradient(135deg, #0a0f1a 0%, #1E3A5F 50%, #0a0f1a 100%); background-size: 400% 400%; animation: gradientShift 15s ease infinite; }}
+        .grid-pattern {{ position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-image: linear-gradient(rgba(52, 152, 219, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(52, 152, 219, 0.03) 1px, transparent 1px); background-size: 50px 50px; animation: gridMove 20s linear infinite; }}
+        @keyframes gradientShift {{ 0% {{ background-position: 0% 50%; }} 50% {{ background-position: 100% 50%; }} 100% {{ background-position: 0% 50%; }} }}
+        @keyframes gridMove {{ 0% {{ transform: translate(0, 0); }} 100% {{ transform: translate(50px, 50px); }} }}
+        .particles {{ position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; }}
+        .particle {{ position: absolute; width: 4px; height: 4px; background: rgba(52, 152, 219, 0.6); border-radius: 50%; animation: float 15s infinite; box-shadow: 0 0 10px rgba(52, 152, 219, 0.8); }}
+        @keyframes float {{ 0%, 100% {{ transform: translateY(100vh) rotate(0deg); opacity: 0; }} 10% {{ opacity: 1; }} 90% {{ opacity: 1; }} 100% {{ transform: translateY(-100vh) rotate(720deg); opacity: 0; }} }}
+        .glow-text {{ text-shadow: 0 0 20px rgba(52, 152, 219, 0.5), 0 0 40px rgba(52, 152, 219, 0.3), 0 0 60px rgba(52, 152, 219, 0.1); }}
     </style>
 </head>
 <body>
+    <!-- Animated Background -->
+    <div class="bg-animated"></div>
+    <div class="grid-pattern"></div>
+    <div class="particles" id="particles"></div>
+
     <div class="max-w-5xl mx-auto px-4 py-8">
-        <!-- Navigation -->
-        <nav class="flex items-center justify-between mb-8">
-            <a href="/" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                Back to Dashboard
-            </a>
-            <div class="flex items-center gap-4">
-                <a href="/docs" class="px-4 py-2 bg-electric/20 text-electric rounded-lg hover:bg-electric/30 transition-colors">API Docs</a>
-                <a href="/demo/vault" class="px-3 py-2 text-sm text-gray-400 hover:text-white">Vault</a>
-                <a href="/demo/media" class="px-3 py-2 text-sm text-gray-400 hover:text-white">Media</a>
-                <a href="/demo/gateway" class="px-3 py-2 text-sm text-gray-400 hover:text-white">Gateway</a>
-                <a href="/demo/x402" class="px-3 py-2 text-sm text-gray-400 hover:text-white">x402</a>
+        <!-- Navigation Bar (Same as Dashboard) -->
+        <nav class="glass-card mb-8 p-4">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div style="width: 12px; height: 12px; background: #2ECC71; border-radius: 50%; animation: pulse 2s infinite;"></div>
+                    <span class="text-sm text-gray-400">Connected to Arc Testnet</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <a href="/" class="px-4 py-2 bg-gradient-to-r from-electric to-neon text-white rounded-lg font-semibold hover:scale-105 transition-transform flex items-center gap-2" style="background: linear-gradient(135deg, #3498DB, #2ECC71);">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        Dashboard
+                    </a>
+                    <a href="/docs" class="px-3 py-2 bg-electric/20 text-electric rounded-lg hover:bg-electric/30 transition-colors text-sm">API Docs</a>
+                    <a href="/demo/vault" class="px-3 py-2 bg-neon/20 text-neon rounded-lg hover:bg-neon/30 transition-colors text-sm">🏦 Vault</a>
+                    <a href="/demo/media" class="px-3 py-2 bg-purple/20 text-purple rounded-lg hover:bg-purple/30 transition-colors text-sm">📄 Media</a>
+                    <a href="/demo/gateway" class="px-3 py-2 bg-electric/20 text-electric rounded-lg hover:bg-electric/30 transition-colors text-sm">🔗 Gateway</a>
+                    <a href="/demo/x402" class="px-3 py-2 bg-yellow-500/20 text-yellow-400 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm">⚡ x402</a>
+                </div>
             </div>
         </nav>
+        <style>
+            @keyframes pulse {{
+                0%, 100% {{ transform: scale(1); }}
+                50% {{ transform: scale(1.1); }}
+            }}
+        </style>
 
         <!-- Header -->
         <header class="text-center mb-12">
             <div class="text-6xl mb-4">{agent_icon}</div>
-            <h1 class="text-4xl font-bold mb-4 gradient-text">{agent_name}</h1>
-            <p class="text-xl text-gray-400 max-w-2xl mx-auto">{description}</p>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 glow-text">
+                <span class="gradient-text">{agent_name}</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto">{description}</p>
         </header>
 
         <!-- Features -->
@@ -208,9 +236,34 @@ def _generate_demo_page(
 
         <!-- Footer -->
         <footer class="text-center py-8 border-t border-gray-800 mt-12">
-            <p class="text-gray-500">USYC Protocol Labs | <a href="/docs" class="text-electric hover:underline">API Documentation</a></p>
+            <p class="text-gray-400 mb-4">Built for <span class="text-electric">Agentic Commerce on Arc</span> Hackathon</p>
+            <div class="flex items-center justify-center gap-4 text-sm text-gray-500">
+                <a href="/" class="hover:text-electric transition-colors">Dashboard</a>
+                <span>•</span>
+                <a href="/docs" class="hover:text-electric transition-colors">API Docs</a>
+                <span>•</span>
+                <a href="/swagger" class="hover:text-electric transition-colors">Swagger UI</a>
+                <span>•</span>
+                <span>By AbdelAziz</span>
+            </div>
         </footer>
     </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {{
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 15; i++) {{
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }}
+        }}
+        createParticles();
+    </script>
 </body>
 </html>'''
 
@@ -270,7 +323,7 @@ def create_app(demo_mode: bool = False) -> FastAPI:
         """,
         version="2.0.0",
         lifespan=lifespan,
-        docs_url="/docs",  # Swagger UI at /docs
+        docs_url="/swagger",  # Swagger UI moved to /swagger
         redoc_url="/redoc",
     )
 
@@ -297,6 +350,16 @@ def create_app(demo_mode: bool = False) -> FastAPI:
         if index_path.exists():
             return HTMLResponse(content=index_path.read_text(encoding="utf-8"))
         return HTMLResponse(content="<h1>USYC Protocol Labs</h1><p>Dashboard not found. Check /docs for API.</p>")
+
+    @app.get("/docs", response_class=HTMLResponse, tags=["Documentation"])
+    async def custom_docs():
+        """Serve the custom API documentation page with the same design as the dashboard."""
+        docs_path = Path(__file__).parent.parent / "static" / "docs.html"
+        if docs_path.exists():
+            return HTMLResponse(content=docs_path.read_text(encoding="utf-8"))
+        # Fallback to Swagger if custom docs not found
+        from fastapi.responses import RedirectResponse
+        return RedirectResponse(url="/swagger")
 
 
     @app.get("/health", tags=["Health"])

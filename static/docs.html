@@ -26,6 +26,10 @@
                         'space': ['Space Grotesk', 'sans-serif'],
                         'mono': ['JetBrains Mono', 'monospace'],
                     },
+                    borderRadius: {
+                        '2xl': '1rem',
+                        '3xl': '1.5rem',
+                    }
                 }
             }
         }
@@ -76,6 +80,47 @@
                 linear-gradient(rgba(52, 152, 219, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(52, 152, 219, 0.03) 1px, transparent 1px);
             background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Floating Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(52, 152, 219, 0.6);
+            border-radius: 50%;
+            animation: float 15s infinite;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.8);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Glow Text */
+        .glow-text {
+            text-shadow: 0 0 20px rgba(52, 152, 219, 0.5),
+                         0 0 40px rgba(52, 152, 219, 0.3),
+                         0 0 60px rgba(52, 152, 219, 0.1);
         }
 
         /* Glassmorphism */
@@ -395,43 +440,49 @@
     <!-- Animated Background -->
     <div class="bg-animated"></div>
     <div class="grid-pattern"></div>
+    <div class="particles" id="particles"></div>
 
     <!-- Main Container -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <!-- Header -->
-        <header class="glass-card p-6 mb-8">
+        <!-- Navigation Bar (Same as Dashboard) -->
+        <nav class="glass-card mb-8 p-4">
             <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-electric to-purple flex items-center justify-center">
-                        <span class="text-2xl">📚</span>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl font-bold">
-                            <span class="gradient-text">USYC Protocol Labs</span>
-                        </h1>
-                        <p class="text-gray-400 text-sm">API Documentation v2.0</p>
-                    </div>
+                <div class="flex items-center gap-3">
+                    <div class="status-pulse" id="statusIndicator"></div>
+                    <span class="text-sm text-gray-400" id="statusText">Connected to Arc Testnet</span>
                 </div>
-
-                <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-2">
-                        <div class="status-pulse"></div>
-                        <span class="text-sm text-gray-400">API Online</span>
-                    </div>
-                    <a href="/" class="nav-link">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                        </svg>
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <a href="/" class="px-4 py-2 bg-navy-light/50 text-white rounded-lg font-semibold hover:bg-navy-light transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                         Dashboard
                     </a>
-                    <a href="/swagger" class="nav-link">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
-                        </svg>
-                        Swagger
+                    <a href="/docs" class="px-4 py-2 bg-gradient-to-r from-electric to-neon text-white rounded-lg font-semibold hover:scale-105 transition-transform flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        API Docs
                     </a>
+                    <a href="/demo/vault" class="px-3 py-2 bg-neon/20 text-neon rounded-lg hover:bg-neon/30 transition-colors text-sm">🏦 Vault</a>
+                    <a href="/demo/media" class="px-3 py-2 bg-purple/20 text-purple rounded-lg hover:bg-purple/30 transition-colors text-sm">📄 Media</a>
+                    <a href="/demo/gateway" class="px-3 py-2 bg-electric/20 text-electric rounded-lg hover:bg-electric/30 transition-colors text-sm">🔗 Gateway</a>
+                    <a href="/demo/x402" class="px-3 py-2 bg-yellow-500/20 text-yellow-400 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm">⚡ x402</a>
                 </div>
+            </div>
+        </nav>
+
+        <!-- Hero Header -->
+        <header class="text-center py-8 mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 glow-text">
+                <span class="gradient-text">API Documentation</span>
+            </h1>
+            <p class="text-lg md:text-xl text-gray-400 mb-4">
+                Interactive API Reference for USYC Protocol Labs
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <span class="px-4 py-2 bg-neon/10 border border-neon/30 rounded-full text-neon text-sm">REST API v2.0</span>
+                <span class="px-4 py-2 bg-electric/10 border border-electric/30 rounded-full text-electric text-sm">OpenAPI 3.0</span>
+                <a href="/swagger" class="px-4 py-2 bg-purple/10 border border-purple/30 rounded-full text-purple text-sm hover:bg-purple/20 transition-colors">
+                    View Swagger UI →
+                </a>
             </div>
         </header>
 
@@ -977,11 +1028,28 @@
 
         <!-- Footer -->
         <footer class="text-center py-8 mt-12 border-t border-gray-800">
-            <p class="text-gray-400 mb-4">Built for <span class="text-electric">Agentic Commerce on Arc</span> Hackathon</p>
-            <div class="flex items-center justify-center gap-4 text-sm text-gray-500">
-                <a href="/" class="hover:text-electric transition-colors">Dashboard</a>
+            <p class="text-gray-400 mb-6">Built for <span class="text-electric">Agentic Commerce on Arc</span> Hackathon</p>
+            <div class="flex items-center justify-center gap-8 mb-6">
+                <div class="px-4 py-2 bg-gray-800/50 rounded-lg text-xs text-gray-500">Circle</div>
+                <div class="px-4 py-2 bg-gray-800/50 rounded-lg text-xs text-gray-500">Arc</div>
+                <div class="px-4 py-2 bg-gray-800/50 rounded-lg text-xs text-gray-500">lablab.ai</div>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 mb-4">
+                <a href="/" class="hover:text-electric transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    Dashboard
+                </a>
                 <span>•</span>
                 <a href="/swagger" class="hover:text-electric transition-colors">Swagger UI</a>
+                <span>•</span>
+                <a href="/redoc" class="hover:text-electric transition-colors">ReDoc</a>
+                <span>•</span>
+                <a href="/demo/vault" class="hover:text-neon transition-colors">Vault Demo</a>
+                <span>•</span>
+                <a href="/demo/x402" class="hover:text-yellow-400 transition-colors">x402 Demo</a>
+            </div>
+            <div class="flex items-center justify-center gap-4 text-sm text-gray-500">
+                <a href="https://github.com" class="hover:text-electric transition-colors">GitHub</a>
                 <span>•</span>
                 <span>By AbdelAziz</span>
             </div>
@@ -990,6 +1058,19 @@
     </div>
 
     <script>
+        // Create floating particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
         // Toggle endpoint expansion
         function toggleEndpoint(id) {
             const card = document.getElementById(`endpoint-${id}`);
