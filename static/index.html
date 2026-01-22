@@ -534,21 +534,42 @@
     <!-- Main Container -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
+        <!-- Navigation Bar -->
+        <nav class="glass-card mb-8 p-4">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="status-pulse" id="statusIndicator"></div>
+                    <span class="text-sm text-gray-400" id="statusText">Connected to Arc Testnet</span>
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-2">
+                    <a href="/docs" class="px-4 py-2 bg-gradient-to-r from-electric to-neon text-white rounded-lg font-semibold hover:scale-105 transition-transform flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        API Docs
+                    </a>
+                    <a href="/demo/vault" class="px-3 py-2 bg-neon/20 text-neon rounded-lg hover:bg-neon/30 transition-colors text-sm">🏦 Vault</a>
+                    <a href="/demo/media" class="px-3 py-2 bg-purple/20 text-purple rounded-lg hover:bg-purple/30 transition-colors text-sm">📄 Media</a>
+                    <a href="/demo/gateway" class="px-3 py-2 bg-electric/20 text-electric rounded-lg hover:bg-electric/30 transition-colors text-sm">🔗 Gateway</a>
+                    <a href="/demo/x402" class="px-3 py-2 bg-yellow-500/20 text-yellow-400 rounded-lg hover:bg-yellow-500/30 transition-colors text-sm">⚡ x402</a>
+                </div>
+            </div>
+        </nav>
+
         <!-- Hero Header -->
         <header class="text-center py-12 mb-8">
-            <div class="flex items-center justify-center gap-3 mb-6">
-                <div class="status-pulse" id="statusIndicator"></div>
-                <span class="text-sm text-gray-400" id="statusText">Connected to Arc Testnet</span>
-            </div>
             <h1 class="text-5xl md:text-7xl font-bold mb-4 glow-text">
                 <span class="gradient-text">USYC Protocol Labs</span>
             </h1>
             <p class="text-xl md:text-2xl text-gray-400 mb-2">
                 Autonomous AI Agent with Circle Gateway & x402
             </p>
-            <p class="text-sm text-gray-500">
+            <p class="text-sm text-gray-500 mb-6">
                 Agentic Commerce on Arc | DeFi Yield Optimization
             </p>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <span class="px-4 py-2 bg-neon/10 border border-neon/30 rounded-full text-neon text-sm">Multi-Agent Architecture</span>
+                <span class="px-4 py-2 bg-electric/10 border border-electric/30 rounded-full text-electric text-sm">Circle Gateway Integration</span>
+                <span class="px-4 py-2 bg-purple/10 border border-purple/30 rounded-full text-purple text-sm">x402 Protocol</span>
+            </div>
         </header>
 
         <!-- Stats Cards -->
@@ -690,6 +711,89 @@
                 <div class="bg-black/30 rounded-xl p-4 font-mono text-sm" id="resultContent">
                     <!-- Result will be populated here -->
                 </div>
+            </div>
+        </div>
+
+        <!-- Meet the Agents -->
+        <div class="glass-card p-8 mb-12">
+            <h2 class="text-3xl font-bold mb-2 text-center">Meet the Agents</h2>
+            <p class="text-gray-400 text-center mb-8">Our multi-agent system powers autonomous commerce on Arc</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Vault Agent -->
+                <a href="/demo/vault" class="block glass-card p-6 hover:border-neon/50 transition-all hover:scale-[1.02] group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-neon/30 to-neon/10 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">🏦</div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-neon mb-2">Vault Agent</h3>
+                            <p class="text-gray-400 text-sm mb-3">DeFi yield optimization with autonomous deposit, withdraw, and compound operations on YieldVaultV2.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-neon/10 text-neon text-xs rounded">Deposit</span>
+                                <span class="px-2 py-1 bg-neon/10 text-neon text-xs rounded">Withdraw</span>
+                                <span class="px-2 py-1 bg-neon/10 text-neon text-xs rounded">Compound</span>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-500 group-hover:text-neon transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+
+                <!-- Media Agent -->
+                <a href="/demo/media" class="block glass-card p-6 hover:border-purple/50 transition-all hover:scale-[1.02] group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple/30 to-purple/10 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">📄</div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-purple mb-2">Media Agent</h3>
+                            <p class="text-gray-400 text-sm mb-3">Automatic PDF receipt generation for all transactions with QR codes linking to Arc Explorer.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-purple/10 text-purple text-xs rounded">PDF Generation</span>
+                                <span class="px-2 py-1 bg-purple/10 text-purple text-xs rounded">QR Codes</span>
+                                <span class="px-2 py-1 bg-purple/10 text-purple text-xs rounded">Branding</span>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-500 group-hover:text-purple transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+
+                <!-- Gateway Client -->
+                <a href="/demo/gateway" class="block glass-card p-6 hover:border-electric/50 transition-all hover:scale-[1.02] group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-electric/30 to-electric/10 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">🔗</div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-electric mb-2">Gateway Client</h3>
+                            <p class="text-gray-400 text-sm mb-3">Circle Gateway integration for seamless USDC transfers via programmable wallets.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-electric/10 text-electric text-xs rounded">USDC Transfer</span>
+                                <span class="px-2 py-1 bg-electric/10 text-electric text-xs rounded">Circle Wallets</span>
+                                <span class="px-2 py-1 bg-electric/10 text-electric text-xs rounded">Fast Settlement</span>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-500 group-hover:text-electric transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+
+                <!-- x402 Handler -->
+                <a href="/demo/x402" class="block glass-card p-6 hover:border-yellow-400/50 transition-all hover:scale-[1.02] group">
+                    <div class="flex items-start gap-4">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-400/30 to-yellow-400/10 flex items-center justify-center text-3xl flex-shrink-0 group-hover:scale-110 transition-transform">⚡</div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold text-yellow-400 mb-2">x402 Handler</h3>
+                            <p class="text-gray-400 text-sm mb-3">HTTP 402 Payment Required protocol for fully autonomous agent-to-service payments.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-2 py-1 bg-yellow-400/10 text-yellow-400 text-xs rounded">Auto-Pay</span>
+                                <span class="px-2 py-1 bg-yellow-400/10 text-yellow-400 text-xs rounded">Payment Proof</span>
+                                <span class="px-2 py-1 bg-yellow-400/10 text-yellow-400 text-xs rounded">Zero Intervention</span>
+                            </div>
+                        </div>
+                        <svg class="w-5 h-5 text-gray-500 group-hover:text-yellow-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+                </a>
+            </div>
+
+            <div class="mt-8 text-center">
+                <a href="/docs" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-electric to-neon text-white rounded-xl font-semibold hover:scale-105 transition-transform">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Explore Full API Documentation
+                </a>
             </div>
         </div>
 
@@ -863,10 +967,20 @@
                 <div class="logo-placeholder">Arc</div>
                 <div class="logo-placeholder">lablab.ai</div>
             </div>
+            <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 mb-4">
+                <a href="/docs" class="hover:text-electric transition-colors flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    API Docs (Swagger)
+                </a>
+                <span>•</span>
+                <a href="/redoc" class="hover:text-electric transition-colors">ReDoc</a>
+                <span>•</span>
+                <a href="/demo/vault" class="hover:text-neon transition-colors">Vault Demo</a>
+                <span>•</span>
+                <a href="/demo/x402" class="hover:text-yellow-400 transition-colors">x402 Demo</a>
+            </div>
             <div class="flex items-center justify-center gap-4 text-sm text-gray-500">
                 <a href="https://github.com" class="hover:text-electric transition-colors">GitHub</a>
-                <span>•</span>
-                <a href="/docs" class="hover:text-electric transition-colors">API Docs</a>
                 <span>•</span>
                 <span>By AbdelAziz</span>
             </div>

@@ -85,6 +85,136 @@ vault_agent: Optional[VaultAgent] = None
 media_agent: Optional[MediaAgent] = None
 
 
+def _generate_demo_page(
+    title: str,
+    agent_name: str,
+    agent_icon: str,
+    description: str,
+    features: list,
+    endpoints: list,
+    demo_code: str,
+    color: str = "electric",
+    extra_content: str = ""
+) -> str:
+    """Generate HTML for a demo page."""
+    color_map = {
+        "neon": {"primary": "#2ECC71", "gradient": "from-green-500 to-emerald-500"},
+        "electric": {"primary": "#3498DB", "gradient": "from-blue-500 to-cyan-500"},
+        "purple": {"primary": "#9B59B6", "gradient": "from-purple-500 to-pink-500"},
+        "yellow": {"primary": "#F1C40F", "gradient": "from-yellow-500 to-orange-500"},
+    }
+    c = color_map.get(color, color_map["electric"])
+
+    features_html = "".join([
+        f'''<div class="glass-card p-4 text-center">
+            <div class="text-3xl mb-2">{f["icon"]}</div>
+            <h4 class="font-semibold mb-1">{f["title"]}</h4>
+            <p class="text-gray-400 text-sm">{f["desc"]}</p>
+        </div>'''
+        for f in features
+    ])
+
+    endpoints_html = "".join([
+        f'''<div class="flex items-center gap-3 p-3 bg-navy/30 rounded-lg">
+            <span class="px-2 py-1 text-xs font-mono rounded {'bg-green-500/20 text-green-400' if e["method"] == 'GET' else 'bg-blue-500/20 text-blue-400'}">{e["method"]}</span>
+            <code class="text-sm text-gray-300">{e["path"]}</code>
+            <span class="text-xs text-gray-500 ml-auto">{e["desc"]}</span>
+        </div>'''
+        for e in endpoints
+    ])
+
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title} | USYC Protocol Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {{
+            theme: {{
+                extend: {{
+                    colors: {{
+                        navy: '#1E3A5F',
+                        'navy-light': '#2a4a73',
+                        electric: '#3498DB',
+                        neon: '#2ECC71',
+                        purple: '#9B59B6',
+                    }},
+                    fontFamily: {{
+                        'space': ['Space Grotesk', 'sans-serif'],
+                        'mono': ['JetBrains Mono', 'monospace'],
+                    }},
+                }}
+            }}
+        }}
+    </script>
+    <style>
+        body {{ font-family: 'Space Grotesk', sans-serif; background: #0a0f1a; color: #fff; min-height: 100vh; }}
+        .glass-card {{ background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(52, 152, 219, 0.2); border-radius: 16px; }}
+        .gradient-text {{ background: linear-gradient(135deg, {c["primary"]} 0%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }}
+    </style>
+</head>
+<body>
+    <div class="max-w-5xl mx-auto px-4 py-8">
+        <!-- Navigation -->
+        <nav class="flex items-center justify-between mb-8">
+            <a href="/" class="text-gray-400 hover:text-white transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                Back to Dashboard
+            </a>
+            <div class="flex items-center gap-4">
+                <a href="/docs" class="px-4 py-2 bg-electric/20 text-electric rounded-lg hover:bg-electric/30 transition-colors">API Docs</a>
+                <a href="/demo/vault" class="px-3 py-2 text-sm text-gray-400 hover:text-white">Vault</a>
+                <a href="/demo/media" class="px-3 py-2 text-sm text-gray-400 hover:text-white">Media</a>
+                <a href="/demo/gateway" class="px-3 py-2 text-sm text-gray-400 hover:text-white">Gateway</a>
+                <a href="/demo/x402" class="px-3 py-2 text-sm text-gray-400 hover:text-white">x402</a>
+            </div>
+        </nav>
+
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="text-6xl mb-4">{agent_icon}</div>
+            <h1 class="text-4xl font-bold mb-4 gradient-text">{agent_name}</h1>
+            <p class="text-xl text-gray-400 max-w-2xl mx-auto">{description}</p>
+        </header>
+
+        <!-- Features -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Features</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {features_html}
+            </div>
+        </section>
+
+        <!-- API Endpoints -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">API Endpoints</h2>
+            <div class="glass-card p-6 space-y-3">
+                {endpoints_html}
+            </div>
+        </section>
+
+        <!-- Code Example -->
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-6">Example Usage</h2>
+            <div class="glass-card p-6">
+                <pre class="font-mono text-sm text-gray-300 overflow-x-auto"><code>{demo_code}</code></pre>
+            </div>
+        </section>
+
+        {extra_content}
+
+        <!-- Footer -->
+        <footer class="text-center py-8 border-t border-gray-800 mt-12">
+            <p class="text-gray-500">USYC Protocol Labs | <a href="/docs" class="text-electric hover:underline">API Documentation</a></p>
+        </footer>
+    </div>
+</body>
+</html>'''
+
+
 def create_app(demo_mode: bool = False) -> FastAPI:
     """
     Create and configure the FastAPI application.
@@ -121,11 +251,27 @@ def create_app(demo_mode: bool = False) -> FastAPI:
 
     app = FastAPI(
         title="USYC Protocol Labs API",
-        description="REST API for YieldVaultV2 operations with x402 autonomous payment support",
+        description="""
+## Autonomous AI Agent for Agentic Commerce
+
+**USYC Protocol Labs** provides a multi-agent system for DeFi yield optimization with autonomous payment capabilities.
+
+### Features
+- **Vault Agent**: DeFi vault operations (deposit, withdraw, compound)
+- **Media Agent**: Automatic PDF receipt generation
+- **Gateway Client**: Circle Gateway USDC transfers
+- **x402 Handler**: Autonomous HTTP 402 payment handling
+
+### Quick Links
+- [Demo: Vault Agent](/demo/vault) - Test vault operations
+- [Demo: Media Agent](/demo/media) - Test receipt generation
+- [Demo: Gateway Client](/demo/gateway) - Test USDC transfers
+- [Demo: x402 Handler](/demo/x402) - Test autonomous payments
+        """,
         version="2.0.0",
         lifespan=lifespan,
-        docs_url="/swagger",  # Move Swagger UI to /swagger
-        redoc_url="/redoc",   # Keep ReDoc available
+        docs_url="/docs",  # Swagger UI at /docs
+        redoc_url="/redoc",
     )
 
     # Add CORS middleware
@@ -152,15 +298,6 @@ def create_app(demo_mode: bool = False) -> FastAPI:
             return HTMLResponse(content=index_path.read_text(encoding="utf-8"))
         return HTMLResponse(content="<h1>USYC Protocol Labs</h1><p>Dashboard not found. Check /docs for API.</p>")
 
-    @app.get("/docs", response_class=HTMLResponse, tags=["Documentation"])
-    async def custom_docs():
-        """Serve custom API documentation page."""
-        docs_path = Path(__file__).parent.parent / "static" / "docs.html"
-        if docs_path.exists():
-            return HTMLResponse(content=docs_path.read_text(encoding="utf-8"))
-        # Fallback to Swagger if custom docs not found
-        from fastapi.responses import RedirectResponse
-        return RedirectResponse(url="/swagger")
 
     @app.get("/health", tags=["Health"])
     async def health():
@@ -446,6 +583,192 @@ def create_app(demo_mode: bool = False) -> FastAPI:
             "payments": _paywall_payments,
             "total_received": sum(p["amount"] for p in _paywall_payments.values()),
         }
+
+    # --- Interactive Demo Pages ---
+
+    @app.get("/demo/vault", response_class=HTMLResponse, tags=["Demo Pages"])
+    async def demo_vault_page():
+        """
+        Interactive demo page for the Vault Agent.
+
+        Test DeFi vault operations:
+        - Deposit USDC into the yield vault
+        - Withdraw shares from the vault
+        - Trigger auto-compound of yields
+        - View real-time balances
+        """
+        return HTMLResponse(content=_generate_demo_page(
+            title="Vault Agent Demo",
+            agent_name="Vault Agent",
+            agent_icon="🏦",
+            description="DeFi yield optimization with autonomous deposit, withdraw, and compound operations on the YieldVaultV2 contract.",
+            features=[
+                {"icon": "📥", "title": "Deposit USDC", "desc": "Deposit USDC into the vault to earn yield"},
+                {"icon": "📤", "title": "Withdraw Shares", "desc": "Withdraw your shares and receive USDC"},
+                {"icon": "🔄", "title": "Auto-Compound", "desc": "Reinvest yields for maximum returns"},
+                {"icon": "📊", "title": "Balance Tracking", "desc": "Real-time vault and USDC balance monitoring"},
+            ],
+            endpoints=[
+                {"method": "POST", "path": "/vault/deposit", "desc": "Deposit USDC (amount in body)"},
+                {"method": "POST", "path": "/vault/withdraw", "desc": "Withdraw shares (shares in body)"},
+                {"method": "POST", "path": "/vault/compound", "desc": "Trigger yield compound"},
+                {"method": "GET", "path": "/vault/balance", "desc": "Get current balances"},
+            ],
+            demo_code='''# Deposit 100 USDC into vault
+curl -X POST "/vault/deposit" \\
+  -H "Content-Type: application/json" \\
+  -d '{"amount": 100.0}'
+
+# Check balance
+curl "/vault/balance"
+
+# Compound yields
+curl -X POST "/vault/compound"''',
+            color="neon"
+        ))
+
+    @app.get("/demo/media", response_class=HTMLResponse, tags=["Demo Pages"])
+    async def demo_media_page():
+        """
+        Interactive demo page for the Media Agent.
+
+        Test PDF receipt generation:
+        - Automatic receipt creation on transactions
+        - Branded PDF documents with QR codes
+        - Transaction history tracking
+        """
+        return HTMLResponse(content=_generate_demo_page(
+            title="Media Agent Demo",
+            agent_name="Media Agent",
+            agent_icon="📄",
+            description="Automatic PDF receipt generation for all vault transactions. Creates branded documents with QR codes linking to Arc Explorer.",
+            features=[
+                {"icon": "📄", "title": "PDF Generation", "desc": "Automatic branded receipt creation"},
+                {"icon": "📱", "title": "QR Codes", "desc": "Scannable links to transaction on Arc Explorer"},
+                {"icon": "🎨", "title": "Custom Branding", "desc": "USYC Protocol Labs branded documents"},
+                {"icon": "📁", "title": "Receipt Archive", "desc": "All receipts stored and accessible"},
+            ],
+            endpoints=[
+                {"method": "GET", "path": "/receipts", "desc": "List all generated receipts"},
+                {"method": "GET", "path": "/receipts/{filename}", "desc": "Download specific PDF"},
+            ],
+            demo_code='''# List all receipts
+curl "/receipts"
+
+# Download a specific receipt
+curl "/receipts/deposit_2024_001.pdf" -o receipt.pdf
+
+# Receipts are auto-generated after:
+# - Deposits
+# - Withdrawals
+# - Compound operations''',
+            color="purple"
+        ))
+
+    @app.get("/demo/gateway", response_class=HTMLResponse, tags=["Demo Pages"])
+    async def demo_gateway_page():
+        """
+        Interactive demo page for the Circle Gateway Client.
+
+        Test USDC transfers via Circle's payment infrastructure:
+        - Send USDC to any address
+        - Check wallet balance
+        - View transfer history
+        """
+        return HTMLResponse(content=_generate_demo_page(
+            title="Gateway Client Demo",
+            agent_name="Circle Gateway Client",
+            agent_icon="🔗",
+            description="Seamless USDC transfers via Circle's programmable wallet infrastructure. Enables fast, secure payments on the Arc network.",
+            features=[
+                {"icon": "💸", "title": "USDC Transfers", "desc": "Send USDC to any blockchain address"},
+                {"icon": "👛", "title": "Wallet Management", "desc": "Circle-managed programmable wallets"},
+                {"icon": "⚡", "title": "Fast Settlement", "desc": "Near-instant transaction confirmation"},
+                {"icon": "🔒", "title": "Secure Infrastructure", "desc": "Enterprise-grade Circle security"},
+            ],
+            endpoints=[
+                {"method": "POST", "path": "/gateway/transfer", "desc": "Transfer USDC to address"},
+                {"method": "GET", "path": "/gateway/balance", "desc": "Get wallet balance"},
+            ],
+            demo_code='''# Check Gateway wallet balance
+curl "/gateway/balance"
+
+# Transfer USDC to an address
+curl -X POST "/gateway/transfer" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "destination_address": "0x742d35Cc6634C0532925a3b844Bc9e7595f8fE21",
+    "amount": 10.0
+  }' ''',
+            color="electric"
+        ))
+
+    @app.get("/demo/x402", response_class=HTMLResponse, tags=["Demo Pages"])
+    async def demo_x402_page():
+        """
+        Interactive demo page for the x402 Autonomous Payment Handler.
+
+        Test HTTP 402 Payment Required handling:
+        - Automatic payment detection
+        - Autonomous USDC payment execution
+        - Payment proof generation and verification
+        """
+        return HTMLResponse(content=_generate_demo_page(
+            title="x402 Handler Demo",
+            agent_name="x402 Autonomous Payment Handler",
+            agent_icon="⚡",
+            description="Revolutionary HTTP 402 Payment Required protocol handler. AI agents automatically detect, pay, and retry when encountering paywalled content.",
+            features=[
+                {"icon": "🔍", "title": "402 Detection", "desc": "Automatic paywall detection from HTTP headers"},
+                {"icon": "💳", "title": "Auto-Payment", "desc": "Autonomous USDC payment via Circle Gateway"},
+                {"icon": "🔐", "title": "Payment Proof", "desc": "Cryptographic proof for content access"},
+                {"icon": "🤖", "title": "Zero Intervention", "desc": "Fully autonomous without human approval"},
+            ],
+            endpoints=[
+                {"method": "POST", "path": "/x402/access", "desc": "Access paywalled URL with auto-pay"},
+                {"method": "GET", "path": "/x402/history", "desc": "View payment history"},
+                {"method": "GET", "path": "/demo/paywall", "desc": "Test paywall (returns 402)"},
+                {"method": "GET", "path": "/demo/paywall/test-auto", "desc": "Test full auto-payment flow"},
+            ],
+            demo_code='''# Test the full autonomous payment flow
+curl "/demo/paywall/test-auto"
+
+# Access any paywalled URL with auto-payment
+curl -X POST "/x402/access" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "url": "https://api.example.com/premium",
+    "auto_pay": true
+  }'
+
+# View payment history
+curl "/x402/history"''',
+            color="yellow",
+            extra_content='''
+            <div class="mt-8 p-6 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 rounded-2xl border border-yellow-500/30">
+                <h3 class="text-xl font-bold text-yellow-400 mb-4">🚀 Try It Now!</h3>
+                <p class="text-gray-300 mb-4">Click the button below to test the autonomous payment flow:</p>
+                <button onclick="testX402()" class="px-6 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-xl font-semibold hover:scale-105 transition-transform">
+                    Test Autonomous Payment
+                </button>
+                <div id="x402Result" class="mt-4 hidden p-4 bg-black/30 rounded-xl font-mono text-sm"></div>
+            </div>
+            <script>
+            async function testX402() {
+                const result = document.getElementById('x402Result');
+                result.classList.remove('hidden');
+                result.innerHTML = '<span class="text-yellow-400">⏳ Testing autonomous payment...</span>';
+                try {
+                    const res = await fetch('/demo/paywall/test-auto');
+                    const data = await res.json();
+                    result.innerHTML = '<span class="text-green-400">✅ Success!</span><pre class="mt-2 text-xs overflow-auto">' + JSON.stringify(data, null, 2) + '</pre>';
+                } catch (e) {
+                    result.innerHTML = '<span class="text-red-400">❌ Error: ' + e.message + '</span>';
+                }
+            }
+            </script>
+            '''
+        ))
 
     # --- Receipts ---
 
