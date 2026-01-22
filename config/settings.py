@@ -33,9 +33,9 @@ class Settings:
     # x402 Autonomous Payment Limits
     max_auto_payment: float = float(os.getenv("MAX_AUTO_PAYMENT", "10.0"))
 
-    # API
+    # API (Railway uses PORT env var)
     api_host: str = os.getenv("API_HOST", "0.0.0.0")
-    api_port: int = int(os.getenv("API_PORT", "8000"))
+    api_port: int = int(os.getenv("PORT", os.getenv("API_PORT", "8000")))
 
     # Branding Colors
     brand_navy: str = "#1E3A5F"
